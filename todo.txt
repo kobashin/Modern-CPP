@@ -1,0 +1,13 @@
+q019_ans.cpp
+
+template <typename C, typename... Args>
+void push_back(C& c, Args&&... args) {
+    // ?
+    (c.push_back(args), ...);
+}
+
+folding expressions
+https://cpprefjp.github.io/lang/cpp17/folding_expressions.html
+
+std::ostream_iterator
+https://cpprefjp.github.io/reference/iterator/ostream_iterator.html
