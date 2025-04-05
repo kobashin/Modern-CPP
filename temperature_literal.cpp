@@ -71,14 +71,14 @@ namespace temperature {
     template <scale S, scale R>
     struct conversion_traits {
         static double convert(double const value) = delete;
-    };
+    };  // Why S and R are defined unless they are not used?
 
     template <>
     struct conversion_traits<scale::celsius, scale::fahrenheit> {
         static double convert(double const value) {
             return (value * 9) / 5 + 32;
         }
-    };
+    };  // Why are template arguments empty?
 
     template <>
     struct conversion_traits<scale::fahrenheit, scale::celsius> {
