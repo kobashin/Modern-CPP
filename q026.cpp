@@ -17,10 +17,20 @@ int main() {
     std::getline(std::cin, s);
     
     std::cout << "Enter your delimiter" << std::endl;
-    // Cannot receive space as a char...
-    std::cin >> d;
+    
+    // Cannot receive white space as a char...
+    // std::cin >> d;
+
+    /*
+        By using manipulator std::noskipws,
+        white space also will become a target of std::cin.
+
+        https://cpprefjp.github.io/reference/ios/noskipws.html
+    */
+    std::cin >> std::noskipws >> d;
+
     
     std::cout << "String from terminal : " << s << std::endl;
-    std::cout << "Delimiter from terminal : " << d << std::endl;
+    std::cout << "Delimiter from terminal : '" << d  << "'" << std::endl;
     return 0;
 }
