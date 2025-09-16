@@ -1,3 +1,5 @@
 *.exe
 .vscode/
 bin/
+quiz/traits_quiz_answers
+quiz/traits_quiz_answers_test
