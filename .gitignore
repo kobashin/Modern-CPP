@@ -1,3 +1,6 @@
 *.exe
 .vscode/
 bin/
+test_*
+!test_*.cpp
+!test_*.h
