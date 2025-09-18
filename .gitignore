@@ -1,8 +1,3 @@
 *.exe
 .vscode/
 bin/
-# Compiled test executables
-test_*
-quiz_test
-solution_test
-*_test
