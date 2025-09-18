@@ -1,7 +1,3 @@
 *.exe
 .vscode/
 bin/
-
-# Quiz executables
-quiz/regex_quiz_answers
-quiz/regex_quiz
