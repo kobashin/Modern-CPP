@@ -1,17 +1,3 @@
 *.exe
 .vscode/
 bin/
-
-# Additional C++ build artifacts
-*.o
-*.obj
-*.out
-*.app
-
-# Quiz and test executables (but keep source files)
-q[0-9][0-9][0-9]
-q[0-9][0-9][0-9]_*
-test_folding
-!*.cpp
-!*.hpp
-!*.h
