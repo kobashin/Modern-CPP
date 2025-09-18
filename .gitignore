@@ -1,7 +1,3 @@
 *.exe
 .vscode/
 bin/
-# Quiz binaries
-quiz/quiz
-quiz/quiz_answers
-quiz/*.out
