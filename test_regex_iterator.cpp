@@ -35,6 +35,16 @@ int main() {
                   << '\'' << std::endl;
     }
 
+    /*
+        std::sregex_iteratorは
+        std::basic_regex_iterator<std::string::const_iterator>の別名
+
+        operator*()	                現在のマッチ結果を取得	std::smatch&
+        operator->()	            マッチ結果へのポインタ	std::smatch*
+        operator++()	            次のマッチへ進む	sregex_iterator&
+        operator==()/operator!=()	イテレータ比較	bool
+    */
+
     // Test: my iterator
     std::cout << "< Test: iterator >" << std::endl;
     std::vector<int> v = {1, 2, 3, 4, 5};

@@ -13,15 +13,15 @@
 // Fill in the blanks to create a generic find function
 template <class Iterator, class T>
 Iterator my_find(Iterator first, Iterator last, T value) {
-    while (_______ != _______) {
+    while (first != last) {
         // Iterator can refer values indirectly by '*'. 
-        if (_______ == _______) {
-            return _______;
+        if (*first == value) {
+            return first;
         }
         // Iterator can move to next value by '++'.
-        _______first;
+        ++first;
     }
-    return _______;
+    return first;
 }
 
 // Part 2: License Plate Validation
@@ -29,29 +29,29 @@ Iterator my_find(Iterator first, Iterator last, T value) {
 bool validate_license_plate_format(std::string const & str) {
     // Create a regex pattern for format: ABC-DE 123 or ABC-DE 1234
     // Pattern should match: 3 uppercase letters, dash, 2 uppercase letters, space, 3-4 digits
-    std::regex rx(R"(_______)");
+    std::regex rx(R"([A-Z]{3}-[A-Z]{2} \d{3,4})");
     
     // Use regex_match to validate the entire string matches the pattern
-    return std::_______(_______._______(), _______);
+    return std::regex_match(str.c_str(), rx);
 }
 
 // Part 3: License Plate Extraction
 // Fill in the regex iterator usage
 std::vector<std::string> extract_license_plate_numbers(std::string const & str) {
     // Create regex pattern with capture group for license plates
-    std::regex rx(R"((_______)*))");
+    std::regex rx(R"(([A-Z]{3}-[A-Z]{2} \d{3,4})*)");
     std::vector<std::string> results;
 
     // Use sregex_iterator to find all matches in the string
-    for (auto i = std::_______(str.begin(), str.end(), _______);
-         i != std::_______(); ++i) {
+    for (auto i = std::sregex_iterator(str.begin(), str.end(), rx);
+         i != std::sregex_iterator(); ++i) {    // 終端イテレータと比較
         // Check if the capture group matched
-        if((*i)[_______].matched) {
+        if((*i)[1].matched) {
             // Add the matched string to results
-            results.push_back(_______->_______());
+            results.push_back(i->str());
         }
     }
-    return _______;
+    return results;
 }
 
 // Part 4: Basic Regex Iterator Example
@@ -59,18 +59,18 @@ void test_regex_iterator() {
     std::cout << "< Test: sregex_iterator >" << std::endl;
     
     // Create a test string with numbers
-    std::string s("_______");
+    std::string s("a01da123456da999d");
     
     // Create regex pattern to match one or more digits
-    std::regex re("_______");
+    std::regex re("\\d+");
 
     // Iterate through all matches using sregex_iterator
-    for (std::_______ it(std::begin(_______), std::end(_______), _______), end; 
-         _______ != _______; ++_______) {
-        auto&& m = *_______;
-        std::cout << "position = " << m._______() 
-                  << ", length = " << m._______() 
-                  << ", str = '" << m._______() 
+    for (std::sregex_iterator it(std::begin(s), std::end(s), re), end; 
+         it != end; ++it) {
+        auto&& m = *it;
+        std::cout << "position = " << m.position() 
+                  << ", length = " << m.length() 
+                  << ", str = '" << m.str() 
                   << '\'' << std::endl;
     }
 }
@@ -80,17 +80,17 @@ void test_vector_iterator() {
     std::cout << "< Test: iterator >" << std::endl;
     
     // Create a vector with some integers
-    std::vector<int> v = {_______, _______, _______, _______, _______};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     
     // Use our my_find function to search for value 3
-    decltype(v)::iterator it = my_find(_______.begin(), _______.end(), _______);
+    decltype(v)::iterator it = my_find(v.begin(), v.end(), 3);
 
-    if (_______ != _______.end()) {
-        std::cout << *_______ << std::endl;
+    if (it != v.end()) {
+        std::cout << *it << std::endl;
     }
     else {
         // found nothing
-        std::cout << "_______" << std::endl;
+        std::cout << "nothing found" << std::endl;
     }
 }
 
@@ -101,8 +101,8 @@ void test_next_iterator() {
     std::vector<int> v = {1, 2, 3, 4, 5};
     
     // Use my_find with next() to limit search to first 3 elements
-    auto it = my_find(v.begin(), _______(v.begin(), _______), 2);
-    std::cout << "my_find(v.begin(), next(v.begin(), 3), 2) = " << *_______ << std::endl;
+    auto it = my_find(v.begin(), std::next(v.begin(), 3), 2);
+    std::cout << "my_find(v.begin(), next(v.begin(), 3), 2) = " << *it << std::endl;
 }
 
 // Part 7: Pointer as Iterator Test
@@ -110,14 +110,13 @@ void test_pointer_iterator() {
     std::cout << "< Test: using pointer as an iterator >" << std::endl;
     
     // Create an array
-    int ar[10] = {_______, _______, _______, _______, _______, 
-                  _______, _______, _______, _______, _______};
+    int ar[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
     // Use my_find with pointers (pointers are iterators!)
-    int* p = my_find(_______, _______ + _______, 7);
+    int* p = my_find(ar, ar + 10, 7);
     
-    if (_______ != _______ + _______) {
-        std::cout << "*p = " << *_______ << std::endl;
+    if (p != ar + 10) {
+        std::cout << "*p = " << *p << std::endl;
     }
 }
 
@@ -127,28 +126,28 @@ void test_additional_patterns() {
     
     // Email validation pattern
     std::string email = "user@example.com";
-    std::regex email_pattern(R"(_______)");  // Fill with email regex pattern
+    std::regex email_pattern(R"([a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+)");  // Fill with email regex pattern
     
-    if (std::regex_match(_______, _______)) {
-        std::cout << "Valid email: " << _______ << std::endl;
+    if (std::regex_match(email, email_pattern)) {
+        std::cout << "Valid email: " << email << std::endl;
     }
     
     // Phone number pattern (XXX-XXX-XXXX)
     std::string phone = "123-456-7890";
-    std::regex phone_pattern(R"(_______)");  // Fill with phone regex pattern
+    std::regex phone_pattern(R"(^[0-9]{3}-[0-9]{3}-[0-9]{4}$)");  // Fill with phone regex pattern
     
-    if (std::_______(_______._______(), _______)) {
-        std::cout << "Valid phone: " << _______ << std::endl;
+    if (std::regex_match(phone.c_str(), phone_pattern)) {
+        std::cout << "Valid phone: " << phone << std::endl;
     }
     
     // Extract all words from a sentence
     std::string sentence = "Hello world from Modern C++";
-    std::regex word_pattern(R"(_______)");  // Fill with word regex pattern
+    std::regex word_pattern(R"([a-zA-Z]+)");  // Fill with word regex pattern
     
     std::cout << "Words found: ";
-    for (std::_______ it(sentence.begin(), sentence.end(), _______), end;
+    for (std::sregex_iterator it(sentence.begin(), sentence.end(), word_pattern), end;
          it != end; ++it) {
-        std::cout << "'" << it->_______() << "' ";
+        std::cout << "'" << it->str() << "' ";
     }
     std::cout << std::endl;
 }

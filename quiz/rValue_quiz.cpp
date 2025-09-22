@@ -39,14 +39,14 @@ void test_basic_rvalue_concepts() {
     int i = 0;
 
     // Fill in the blanks: What type of value are these?
-    i;      // Named objects are _______ values (lvalue/rvalue)
-    0;      // Literal values are _______ values (lvalue/rvalue) 
+    i;      // Named objects are l values (lvalue/rvalue)
+    0;      // Literal values are r values (lvalue/rvalue) 
 
     Foo x;
-    x;      // Named objects are _______ values (lvalue/rvalue)
-    Foo();  // Constructor return values are _______ values (lvalue/rvalue)
+    x;      // Named objects are l values (lvalue/rvalue)
+    Foo();  // Constructor return values are r values (lvalue/rvalue)
 
-    f();    // Function return values are _______ values (lvalue/rvalue)
+    f();    // Function return values are r values (lvalue/rvalue)
     
     std::cout << "Basic rValue concepts test completed." << std::endl;
 }
@@ -61,15 +61,15 @@ void test_reference_binding() {
     int x = 0;
 
     // Fill in the reference types:
-    /* FILL_IN_TYPE */& lvalue_ref_1 = x;          // lvalue reference type
+    int& lvalue_ref_1 = x;          // lvalue reference type
     // int& lvalue_ref_error = 0;                  // Error: cannot bind rvalue to lvalue reference
     
-    // /* FILL_IN_TYPE */ rvalue_ref_error = x;     // Error: cannot bind lvalue to rvalue reference  
-    /* FILL_IN_TYPE */&& rvalue_ref_1 = 0;        // rvalue reference type
+    // int&& rvalue_ref_error = x;     // Error: cannot bind lvalue to rvalue reference  
+    int&& rvalue_ref_1 = 0;        // rvalue reference type
 
     // const lvalue reference - special case
-    const /* FILL_IN_TYPE */& const_lvalue_ref_1 = x;    // can bind lvalue
-    const /* FILL_IN_TYPE */& const_lvalue_ref_2 = 0;    // can also bind _______ (lvalue/rvalue)
+    const int& const_lvalue_ref_1 = x;    // can bind lvalue
+    const int& const_lvalue_ref_2 = 0;    // can also bind rvalue (lvalue/rvalue)
     
     std::cout << "Reference binding test completed." << std::endl;
 }
@@ -85,39 +85,39 @@ class large_class {
         // Default constructor
         large_class() {
             ptr = new char[1000];
-            std::cout << "[_______ constructor]" << std::endl;  // Fill in constructor type
+            std::cout << "[_Default_ constructor]" << std::endl;  // Fill in constructor type
         }
 
         // Copy constructor - takes const reference to same class
-        large_class(const /* FILL_IN_TYPE */& r) {
+        large_class(const large_class& r) {
             ptr = new char[1000];
             std::copy(r.ptr, r.ptr + 1000, ptr);
-            std::cout << "[_______ constructor]" << std::endl;  // Fill in constructor type
+            std::cout << "[Copy constructor]" << std::endl;  // Fill in constructor type
         }
 
         // Destructor
         ~large_class() {
             delete[] ptr;
-            std::cout << "[_______]" << std::endl;  // Fill in what this is
+            std::cout << "[Destructor]" << std::endl;  // Fill in what this is
         }
 
         // Move constructor - takes rvalue reference
-        large_class(/* FILL_IN_TYPE */&& r) {
+        large_class(large_class&& r) {
             // Transfer ownership - fill in the implementation
-            ptr = _______;        // Transfer pointer
-            r.ptr = _______;      // Set original to safe state
-            std::cout << "[_______ constructor]" << std::endl;  // Fill in constructor type
+            ptr = r.ptr;        // Transfer pointer
+            r.ptr = nullptr;      // Set original to safe state
+            std::cout << "[Move constructor]" << std::endl;  // Fill in constructor type
         }
 
         // Move assignment operator
-        large_class& operator=(/* FILL_IN_TYPE */&& r) {
+        large_class& operator=(large_class&& r) {
             // Clean up existing resource
             delete[] ptr;
             
             // Transfer ownership - fill in the implementation  
-            ptr = _______;        // Transfer pointer
-            r.ptr = _______;      // Set original to safe state
-            std::cout << "[_______ operator=]" << std::endl;  // Fill in operator type
+            ptr = r.ptr;        // Transfer pointer
+            r.ptr = nullptr;      // Set original to safe state
+            std::cout << "[Move operator=]" << std::endl;  // Fill in operator type
             
             return *this;
         }
@@ -137,16 +137,16 @@ void test_move_semantics() {
     // This will call default constructor  
     large_class y{};
     
-    // This will call _______ constructor (copy/move)
+    // This will call copy constructor (copy/move)
     large_class z(y);
 
     // Using std::move to force move constructor
     // Fill in the function that converts lvalue to rvalue:
-    large_class x(_______::______(tmp));
+    large_class x(std::move(tmp));
     
     // Using std::move for move assignment
     // Fill in the function call:
-    y = _______::______(x);
+    y = std::move(x);
     
     // Test validity after moves
     std::cout << "tmp valid after move: " << (tmp.is_valid() ? "true" : "false") << std::endl;
@@ -164,10 +164,10 @@ void test_string_move() {
     std::string x = "Hello, world!";
     
     // This line doesn't actually move anything - fill in what happens:
-    std::_______(x); // Function name - Nothing happens because result is not _______
+    std::move(x); // Function name - Nothing happens because result is not _______
     
     // This actually moves the string - fill in the function:
-    std::string y = std::_______(x);
+    std::string y = std::move(x);
     
     std::cout << "x after move: '" << x << "'" << std::endl;
     std::cout << "y after move: '" << y << "'" << std::endl;
@@ -177,13 +177,13 @@ void test_unique_ptr_ownership() {
     std::cout << "\n=== Testing Unique Pointer Ownership Transfer ===" << std::endl;
     
     // Create unique_ptr - fill in template parameter type:
-    std::unique_ptr</* FILL_IN_TYPE */> p(new int(1));
+    std::unique_ptr<int> p(new int(1));
     
     std::cout << "p points to: " << (p ? "valid object" : "nullptr") << std::endl;
     std::cout << "Value: " << (p ? *p : 0) << std::endl;
     
     // Transfer ownership - fill in the function call:
-    std::unique_ptr<int> q = _______::______(p);
+    std::unique_ptr<int> q = std::move(p);
     
     std::cout << "After ownership transfer:" << std::endl;
     std::cout << "p points to: " << (p ? "valid object" : "nullptr") << std::endl;  
@@ -196,14 +196,14 @@ void test_unique_ptr_ownership() {
 // ============================================================================
 
 // Fill in the function signature for a function that accepts rvalue reference to string:
-/* FILL_IN_RETURN_TYPE */ process_rvalue_string(/* FILL_IN_PARAMETER_TYPE */) {
+void process_rvalue_string(std::string&& s) {
     std::cout << "Processing rvalue string: " << s << std::endl;
     // Fill in: what should we return?
     return /* BLANK */;
 }
 
 // Fill in the function signature for a function that accepts lvalue reference to string:  
-/* FILL_IN_RETURN_TYPE */ process_lvalue_string(/* FILL_IN_PARAMETER_TYPE */) {
+void process_lvalue_string(std::string& s) {
     std::cout << "Processing lvalue string: " << s << std::endl;
     return /* BLANK */;
 }
@@ -217,7 +217,7 @@ void test_function_overloading() {
     process_lvalue_string(str);
     
     // This should call rvalue version - fill in the function call:
-    process_rvalue_string(_______::______(str));
+    process_rvalue_string(std::move(str));
     
     // This should also call rvalue version:
     process_rvalue_string("temporary string");
@@ -233,7 +233,7 @@ void performance_test() {
     // Test 1: Copy construction (slow)
     {
         large_class original;
-        // This will use _______ constructor (copy/move)
+        // This will use copy constructor (copy/move)
         large_class copy_constructed(original);
     }
     
@@ -242,9 +242,9 @@ void performance_test() {
     // Test 2: Move construction (fast)  
     {
         large_class original;
-        // This will use _______ constructor (copy/move) 
+        // This will use move constructor (copy/move) 
         // Fill in the function call:
-        large_class move_constructed(_______::______(original));
+        large_class move_constructed(std::move(original));
     }
 }
 
@@ -253,10 +253,13 @@ void performance_test() {
 // ============================================================================
 
 template<typename T>
-void process_universal_ref(/* FILL_IN_TYPE */) {
+void process_universal_ref(T&& t) {
     std::cout << "Processing universal reference" << std::endl;
     // Fill in: what happens when T&& is used in template?
-    // Answer: It becomes a _______ reference when used in templates
+    // Answer: It becomes a universal reference when used in templates
+
+    // Perfect Forwarding
+    // https://cpprefjp.github.io/lang/cpp11/rvalue_ref_and_move_semantics.html
 }
 
 void test_universal_references() {
@@ -265,9 +268,9 @@ void test_universal_references() {
     int x = 42;
     
     // These calls will deduce different types:
-    process_universal_ref(x);           // T deduced as _______&
-    process_universal_ref(100);         // T deduced as _______
-    process_universal_ref(std::move(x)); // T deduced as _______
+    process_universal_ref(x);           // T deduced as int&
+    process_universal_ref(100);         // T deduced as int
+    process_universal_ref(std::move(x)); // T deduced as int
 }
 
 // ============================================================================
@@ -277,7 +280,7 @@ void test_universal_references() {
 template<typename T>
 void forward_to_function(T&& arg) {
     // Fill in: How to perfectly forward the argument?
-    process_universal_ref(_______::_______(arg));
+    process_universal_ref(std::forward<T>(arg));
 }
 
 void test_perfect_forwarding() {
@@ -308,47 +311,47 @@ private:
 public:
     // Default constructor
     Resource(const std::string& n = "default") : name(n), data(nullptr), size(0) {
-        std::cout << "[Resource " << name << " _______ constructor]" << std::endl;
+        std::cout << "[Resource " << name << " default constructor]" << std::endl;
     }
     
     // Constructor with size
     Resource(const std::string& n, size_t s) : name(n), size(s) {
         data = new int[size];
-        std::cout << "[Resource " << name << " _______ constructor with size " << size << "]" << std::endl;
+        std::cout << "[Resource " << name << " parameterized constructor with size " << size << "]" << std::endl;
     }
     
     // Copy constructor
-    Resource(const /* FILL_IN_TYPE */& other) : name(other.name + "_copy"), size(other.size) {
+    Resource(const Resource& other) : name(other.name + "_copy"), size(other.size) {
         if (size > 0) {
             data = new int[size];
             std::copy(other.data, other.data + size, data);
         } else {
             data = nullptr;
         }
-        std::cout << "[Resource " << name << " _______ constructor]" << std::endl;
+        std::cout << "[Resource " << name << " copy constructor]" << std::endl;
     }
     
     // Move constructor  
-    Resource(/* FILL_IN_TYPE */&& other) noexcept : name(std::move(other.name) + "_moved"), size(other.size) {
+    Resource(Resource&& other) noexcept : name(std::move(other.name) + "_moved"), size(other.size) {
         // Transfer ownership
-        data = _______;
+        data = other.data;
         
         // Reset source object
-        other.data = _______;
-        other.size = _______;
-        other.name = "_______";
+        other.data = nullptr;
+        other.size = 0;
+        other.name = "moved";
         
-        std::cout << "[Resource " << name << " _______ constructor]" << std::endl;
+        std::cout << "[Resource " << name << " move constructor]" << std::endl;
     }
     
     // Copy assignment operator
-    Resource& operator=(const /* FILL_IN_TYPE */& other) {
+    Resource& operator=(const Resource& other) {
         if (this != &other) {
             // Clean up existing resources
             delete[] data;
             
             // Copy data
-            name = other.name + "_______";
+            name = other.name + "_copied";
             size = other.size;
             if (size > 0) {
                 data = new int[size];
@@ -357,34 +360,34 @@ public:
                 data = nullptr;
             }
         }
-        std::cout << "[Resource " << name << " _______ assignment]" << std::endl;
+        std::cout << "[Resource " << name << " copy assignment]" << std::endl;
         return *this;
     }
     
     // Move assignment operator
-    Resource& operator=(/* FILL_IN_TYPE */&& other) noexcept {
+    Resource& operator=(Resource&& other) noexcept {
         if (this != &other) {
             // Clean up existing resources
             delete[] data;
             
             // Move data
-            name = _______::______(other.name) + "_moved_assigned";
+            name = std::move(other.name) + "_moved_assigned";
             size = other.size;
-            data = _______;
+            data = other.data;
             
             // Reset source
-            other.data = _______;
-            other.size = _______;
-            other.name = "_______";
+            other.data = nullptr;
+            other.size = 0;
+            other.name = "moved";
         }
-        std::cout << "[Resource " << name << " _______ assignment]" << std::endl;
+        std::cout << "[Resource " << name << " move assignment]" << std::endl;
         return *this;
     }
     
     // Destructor
     ~Resource() {
         delete[] data;
-        std::cout << "[Resource " << name << " _______]" << std::endl;
+        std::cout << "[Resource " << name << " destructor]" << std::endl;
     }
     
     // Helper methods
@@ -399,21 +402,21 @@ void test_advanced_move_scenarios() {
     // Test 1: Constructor calls
     Resource r1("original", 10);
     
-    // This should call _______ constructor
+    // This should call copy constructor
     Resource r2(r1);
     
-    // This should call _______ constructor
-    Resource r3(_______::______(r1));
+    // This should call move constructor
+    Resource r3(std::move(r1));
     
     // Test 2: Assignment calls
     Resource r4("target");
     
-    // This should call _______ assignment
+    // This should call copy assignment
     r4 = r2;
     
     Resource r5("another_target"); 
-    // This should call _______ assignment
-    r5 = _______::______(r3);
+    // This should call move assignment
+    r5 = std::move(r3);
     
     std::cout << "Final states:" << std::endl;
     std::cout << "r1: " << r1.get_name() << " (valid: " << r1.is_valid() << ")" << std::endl;
@@ -435,23 +438,23 @@ void test_value_categories() {
     
     // Classify each expression as lvalue, prvalue, or xvalue:
     
-    x;                    // This is an _______ (lvalue/prvalue/xvalue)
-    42;                   // This is a _______ (lvalue/prvalue/xvalue)  
-    x + y;                // This is a _______ (lvalue/prvalue/xvalue)
-    ++x;                  // This is an _______ (lvalue/prvalue/xvalue)
-    x++;                  // This is a _______ (lvalue/prvalue/xvalue)
-    std::move(x);         // This is an _______ (lvalue/prvalue/xvalue)
+    x;                    // This is an lvalue (lvalue/prvalue/xvalue)
+    42;                   // This is a prvalue (lvalue/prvalue/xvalue)  
+    x + y;                // This is a prvalue (lvalue/prvalue/xvalue)
+    ++x;                  // This is an lvalue (lvalue/prvalue/xvalue)
+    x++;                  // This is a prvalue (lvalue/prvalue/xvalue)
+    std::move(x);         // This is an xvalue (lvalue/prvalue/xvalue)
     
     int arr[5];
-    arr[0];               // This is an _______ (lvalue/prvalue/xvalue)
+    arr[0];               // This is an lvalue (lvalue/prvalue/xvalue)
     
     std::string str = "hello";
-    str.substr(1, 2);     // This is a _______ (lvalue/prvalue/xvalue)
+    str.substr(1, 2);     // This is a prvalue (lvalue/prvalue/xvalue)
     
     // Fill in the missing concepts:
-    // _______ = expressions whose identity matters (can take address)
-    // _______ = expressions that can be moved from (rvalue references)  
-    // _______ = temporary expressions that are about to be destroyed
+    // lvalues = expressions whose identity matters (can take address)
+    // xvalues = expressions that can be moved from (rvalue references)  
+    // prvalues = temporary expressions that are about to be destroyed
     
     std::cout << "Value categories test completed." << std::endl;
 }
