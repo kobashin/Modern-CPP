@@ -1,4 +1,13 @@
 #include "Reminder.hpp"
+#include <iostream>
+
+Reminder::Reminder(void) {
+    std::cout << "Reminder::Reminder()" << std::endl;
+}
+
+Reminder::~Reminder(void) {
+    std::cout << "Reminder::~Reminder()" << std::endl;
+}
 
 void Reminder::remind(void) {
     begin_alert();
