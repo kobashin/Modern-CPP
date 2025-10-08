@@ -70,4 +70,32 @@ int main() {
         std::cout << "*p = " << *p << std::endl;
     }
 
+    // Test: regex_search (from q067.cpp password validation)
+    std::cout << "< Test: regex_search for password validation >" << std::endl;
+    std::vector<std::string> passwords = {
+        "1234-5678",     // has symbol
+        "password123",   // no symbol
+        "Pass@word1",    // has symbol
+        "simple"         // no symbol
+    };
+    
+    // Regex for symbols: !#$%&-=@;:_
+    std::regex symbol_re("[!#$%&\\-=@;:_]");
+    
+    for (const auto& pwd : passwords) {
+        bool hasSymbol = std::regex_search(pwd, symbol_re);
+        std::cout << "Password: '" << pwd << "' -> Symbol check: " 
+                  << (hasSymbol ? "OK" : "NG") << std::endl;
+    }
+    
+    /*
+        std::regex_search() searches for the first match in the string
+        Returns true if a match is found, false otherwise
+        Used in q067.cpp for password validation to check if special symbols exist
+        
+        Difference from std::sregex_iterator:
+        - regex_search: finds if pattern exists (returns bool)
+        - sregex_iterator: iterates through all matches (returns iterator)
+    */
+
 }
