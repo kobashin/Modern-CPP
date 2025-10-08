@@ -27,6 +27,8 @@ int main() {
     std::string s("a01da123456da999d");
     std::regex re("\\d+");
 
+    // 注意: endは初期化していないように見えるが、デフォルトコンストラクタが呼ばれる
+    // std::sregex_iteratorのデフォルトコンストラクタは終端イテレータを作成する
     for (std::sregex_iterator it(std::begin(s), std::end(s), re), end; it != end; ++it) {
         auto&& m = *it;
         std::cout << "position = " << m.position() 
@@ -39,11 +41,29 @@ int main() {
         std::sregex_iteratorは
         std::basic_regex_iterator<std::string::const_iterator>の別名
 
+        重要: デフォルトコンストラクタは終端イテレータを作成する
+        - std::sregex_iterator end; // 終端イテレータ
+        - std::sregex_iterator it(begin, end, regex); // 開始イテレータ
+
         operator*()	                現在のマッチ結果を取得	std::smatch&
         operator->()	            マッチ結果へのポインタ	std::smatch*
         operator++()	            次のマッチへ進む	sregex_iterator&
         operator==()/operator!=()	イテレータ比較	bool
     */
+
+    // Demo: デフォルトコンストラクタの動作確認
+    std::cout << "< Demo: Default constructor behavior >" << std::endl;
+    std::sregex_iterator default_iter;  // デフォルトコンストラクタ（終端イテレータ）
+    std::sregex_iterator start_iter(std::begin(s), std::end(s), re);  // 開始イテレータ
+    
+    // 最初は異なる
+    std::cout << "start_iter == default_iter: " << (start_iter == default_iter) << std::endl;
+    
+    // すべてのマッチを進めると同じになる
+    while (start_iter != default_iter) {
+        ++start_iter;
+    }
+    std::cout << "After iterating, start_iter == default_iter: " << (start_iter == default_iter) << std::endl;
 
     // Test: my iterator
     std::cout << "< Test: iterator >" << std::endl;
