@@ -1,24 +1,24 @@
 ```mermaid
 classDiagram
-    Reminder <|-- MorningReminder
-    Reminder <|-- NightReminder
+    BeverageMaker <|-- TeaMaker
+    BeverageMaker <|-- CoffeeMaker
 
-    class Reminder{
-        +begin_greet()
-        +alert()
-        +end_greet()
-        +remind()
+    class BeverageMaker{
+        <<abstract>>
+        +boilWater()
+        +pourInCup()
+        +brew()* 
+        +addCondiments()*
+        +makeBeverage()
     }
 
-    class MorningReminder{
-        +begin_greet()
-        +alert()
-        +end_greet()
+    class TeaMaker{
+        +brew()
+        +addCondiments()
     }
 
-    class NightReminder{
-        +begin_greet()
-        +alert()
-        +end_greet()
+    class CoffeeMaker{
+        +brew()
+        +addCondiments()
     }
 ```
