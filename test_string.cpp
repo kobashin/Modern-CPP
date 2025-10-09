@@ -28,6 +28,7 @@ void create_string_object() {
     cout << "string f(b.begin(), b.end());" << " // " << f << endl;
 }
 
+// p195 : compare string objects
 void compare_string_object() {
 
     cout << "=== compare_string_object() ===" << endl;
@@ -44,9 +45,44 @@ void compare_string_object() {
     cout << "a >= b : " << (a >= b) << endl;
 }
 
+// p202 : manipulate strings by using iterator
+void foo(string::const_iterator a) {
+    // do nothing
+}
+
+void foo(string::iterator a) {
+    *a = 'x';
+}
+
+void manipulate_string_object() {
+
+    cout << "=== manipulate_string_object() ===" << endl;
+
+    // scan strings bu using range-for
+    string x = "hello";
+    cout << "x:";
+    for (const char& c : x) {
+        cout << c;
+    }
+    cout << endl;
+
+    cout << "string y(x.rbegin(), x.rend());" << endl;
+    string y(x.rbegin(), x.rend());
+    cout << "y:" << y << endl;
+
+    cout << "foo(y.cbegin());" << endl;
+    foo(y.cbegin());
+    cout << "y:" << y << endl;
+
+    cout << "foo(y.begin());" << endl;
+    foo(y.begin());
+    cout << "y:" << y << endl;
+}
+
 int main() {
     create_string_object();
     compare_string_object();
+    manipulate_string_object();
 
     return 0;
 }
