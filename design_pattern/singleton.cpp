@@ -20,7 +20,7 @@ class Singleton {
         }
 
         void showMessage() {
-            std::cout << "Hello, from SIngleton!" << std::endl;
+            std::cout << "Hello, from Singleton!" << std::endl;
         }
 };
 
@@ -36,6 +36,6 @@ int main() {
     s1->showMessage();
 
     Singleton* s2 = Singleton::getInstance();
-    std::cout << "s1 == s2 : " << (s1 == s2) << std::endl;
+    std::cout << "s1 == s2 : " << (s1 == s2 ? "True" : "False") << std::endl;
 
 }
