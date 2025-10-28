@@ -1,0 +1,3 @@
+[submodule "cpp_software_design"]
+	path = cpp_software_design
+	url = https://github.com/igl42/cpp_software_design
