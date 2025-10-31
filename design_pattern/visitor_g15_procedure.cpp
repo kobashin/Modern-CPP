@@ -33,7 +33,8 @@ class Shape {
 class Circle : public Shape {
     public:
         explicit Circle(double radius)
-            : radius_(radius) {
+            : Shape(circle)
+            , radius_(radius) {
                 /* Checking that the given radius is valid */
             }
 
@@ -100,7 +101,7 @@ void draw(Square const& square) {
 #include <vector>
 class Shape;
 
-void deawAllShapes(std::vector<std::unique_ptr<Shapes>> const& shapes);
+void deawAllShapes(std::vector<std::unique_ptr<Shape>> const& shapes);
 
 //---- <DrawAllShapes.cpp> ----
 
